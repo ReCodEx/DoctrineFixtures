@@ -30,16 +30,15 @@ final class FixturesExtension extends CompilerExtension
 
 	public function loadConfiguration()
 	{
-		$containerBuilder = $this->getContainerBuilder();
 		$services = $this->loadFromFile(__DIR__ . '/services.neon');
-		$this->compiler->parseServices($containerBuilder, $services);
+		$this->compiler->loadDefinitionsFromConfig($services['services']);
 	}
 
 
 	public function beforeCompile()
 	{
 		$containerBuilder = $this->getContainerBuilder();
-		$containerBuilder->prepareClassList();
+		$containerBuilder->resolve();
 
 		$this->loadFakerProvidersToAliceLoader();
 		$this->loadParsersToAliceLoader();
