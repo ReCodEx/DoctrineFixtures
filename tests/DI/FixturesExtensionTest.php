@@ -37,13 +37,13 @@ final class FixturesExtensionTest extends TestCase
 		$extension->loadConfiguration();
 
 		$containerBuilder = $extension->getContainerBuilder();
-		$containerBuilder->prepareClassList();
+		$containerBuilder->resolve();
 
 		$aliceLoaderDefinition = $containerBuilder->getDefinition(
 			$containerBuilder->getByType(AliceLoaderInterface::class)
 		);
 
-		$this->assertSame(AliceLoader::class, $aliceLoaderDefinition->getClass());
+		$this->assertSame(AliceLoader::class, $aliceLoaderDefinition->getType());
 	}
 
 
@@ -54,9 +54,9 @@ final class FixturesExtensionTest extends TestCase
 
 		$containerBuilder = $extension->getContainerBuilder();
 		$containerBuilder->addDefinition('company')
-			->setClass(Company::class);
+			->setType(Company::class);
 
-		$containerBuilder->prepareClassList();
+		$containerBuilder->resolve();
 
 		$extension->beforeCompile();
 

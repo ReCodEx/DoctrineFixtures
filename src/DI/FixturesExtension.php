@@ -13,7 +13,7 @@ use Faker\Provider\Base;
 use Nelmio\Alice\Fixtures\Loader;
 use Nelmio\Alice\Fixtures\Parser\Methods\MethodInterface;
 use Nette\DI\CompilerExtension;
-use Nette\DI\ServiceDefinition;
+use Nette\DI\Definitions\ServiceDefinition;
 
 
 final class FixturesExtension extends CompilerExtension
@@ -48,7 +48,8 @@ final class FixturesExtension extends CompilerExtension
 	private function loadFakerProvidersToAliceLoader()
 	{
 		$containerBuilder = $this->getContainerBuilder();
-		$config = $this->getConfig($this->defaults);
+		$this->setConfig($this->validateConfig($this->defaults));
+		$config = $this->getConfig();
 
 		$this->getDefinitionByType(Loader::class)->setArguments([
 			$config['locale'],
@@ -64,7 +65,7 @@ final class FixturesExtension extends CompilerExtension
 
 		$aliceLoaderDefinition = $this->getDefinitionByType(Loader::class);
 		foreach ($containerBuilder->findByType(MethodInterface::class) as $parserDefinition) {
-			$aliceLoaderDefinition->addSetup('addParser', ['@' . $parserDefinition->getClass()]);
+			$aliceLoaderDefinition->addSetup('addParser', ['@' . $parserDefinition->getType()]);
 		}
 	}
 
